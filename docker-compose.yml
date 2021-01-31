@@ -1,0 +1,47 @@
+version: '3'
+services:
+
+  frontend:
+    build: ./Frontend
+    volumes:
+      - ./Frontend:/var/www/html
+    ports:
+      - 80:80
+    environment:
+      PMA_HOST: database
+      PMA_USER: annauser
+      PMA_PASSWORD: annapass
+      MYSQL_ROOT_PASSWORD: annapass
+    depends_on:
+      - database
+
+
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: anna_phpmyadmin
+    ports:
+      - 5010:80
+    environment:
+      PMA_HOST: database
+      PMA_USER: annauser
+      PMA_PASSWORD: annapass
+      MYSQL_ROOT_PASSWORD: annapass
+
+
+
+  database:
+    image: mysql:8.0
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: annapass
+      MYSQL_DATABASE: annashop
+      MYSQL_USER: annauser
+      MYSQL_PASSWORD: annapass
+
+
+volumes:
+ mysql-data:
+   driver: local
